@@ -4,6 +4,7 @@
 
 @include('admin/video/title', array('current' => 'video'))
 
+<br />
 <div class="pull-right">
 	<a href="{{ route('admin.video.edit', $video->id) }}" class="btn btn-sm btn-default">
 		<span class="glyphicon glyphicon-edit"></span> Edit
@@ -31,8 +32,16 @@
 			<td>{{ $video->type() }}</td>
 		</tr>
 		<tr>
+			<th class="text-right">Slug</th>
+			<td>{{ $video->slug }}</td>
+		</tr>
+		<tr>
 			<th class="text-right">Title</th>
 			<td>{{ $video->title }}</td>
+		</tr>
+		<tr>
+			<th class="text-right">Genres</th>
+			<td>{{ implode(' - ', $video->genres->lists('name')) }}</td>
 		</tr>
 		<tr>
 			<th class="text-right">Summary</th>

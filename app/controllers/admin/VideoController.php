@@ -10,7 +10,7 @@ class Admin_VideoController extends \BaseController {
 	protected $rules = array(
 		'parent_id' => 'exists:videos,id',
 		'type'		=> 'required|in:movie,episode,show',
-		'name'		=> 'required',
+		'name'		=> 'required|unique:videos,name',
 		'title'		=> 'required',
 	);
 	
@@ -48,11 +48,12 @@ class Admin_VideoController extends \BaseController {
 	public function store()
 	{
 		$validator = Validator::make(Input::all(), $this->rules);
-
+		
 		if ($validator->fails()) {
 			return Redirect::route('admin.video.create')->withInput()->withErrors($validator);
 		} else {
 			$video = Video::create(Input::all());
+			$video->genres()->sync(Input::get('genres'));
 			return Redirect::route('admin.video.show', array($video->id));
 		}
 	}
@@ -77,6 +78,8 @@ class Admin_VideoController extends \BaseController {
 	public function edit($id)
 	{
 		$video = Video::find($id);
+		$video->genres = $video->genres()->lists('id');
+		
 		return View::make('admin/video/edit', compact('video'))->nest('form', 'admin/video/form', compact('video'));
 	}
 
@@ -89,12 +92,15 @@ class Admin_VideoController extends \BaseController {
 	public function update($id)
 	{
 		$video = Video::find($id);
-		$validator = Validator::make(Input::all(), $this->rules);
+		$rules = $this->rules;
+		$rules['name'].= ',' . $id;
+		$validator = Validator::make(Input::all(), $rules);
 
 		if ($validator->fails()) {
 			return Redirect::route('admin.video.edit', array($id))->withInput()->withErrors($validator);
 		} else {
 			$video->update(Input::all());
+			$video->genres()->sync(Input::get('genres'));
 			return Redirect::route('admin.video.show', array($video->id));
 		}
 	}

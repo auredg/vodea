@@ -1,9 +1,10 @@
 @extends('layouts.admin')
 
 @section('content')
-<h2>
-	<span>Studios <small>Edit studio {{ $studio->login }}</small></span>
-</h2>
+
+@include('admin/video/title', array('current' => 'price'))
+
+<h3>Prices <small>Edit</small></h3>
 
 {{ $form }}
 @stop

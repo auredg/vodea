@@ -14,7 +14,7 @@ class Video extends Eloquent {
 	 *
 	 * @var array
 	 */
-	protected $fillable = array('active', 'studio_id', 'name', 'title', 'type', 'parent_id', 'summary', 'description');
+	protected $fillable = array('active', 'studio_id', 'name', 'title', 'slug', 'type', 'parent_id', 'summary', 'description');
 	
 	/**
 	 * Types available
@@ -23,6 +23,26 @@ class Video extends Eloquent {
 	 */
 	protected static $types = array('movie' => 'Movie', 'show' => 'TV Show', 'episode' => 'Episode');
 	
+	
+	/*
+	 * Public methods 
+	 */
+	
+	
+	/**
+	 * Extending save method 
+	 * 
+	 * @param array $options
+	 * @return bool
+	 */
+	public function save(array $options = array()) {
+		if (empty($this->slug) && !empty($this->name)) {
+			$this->slug = Str::slug($this->name);
+		}
+		
+		return parent::save($options);
+	}
+	
 	/**
 	 * Return current model type name
 	 * 
@@ -30,6 +50,21 @@ class Video extends Eloquent {
 	 */
 	public function type() {
 		return self::getType($this->type);
+	}
+	
+	
+	/*
+	 * Static methods
+	 */
+	
+	/**
+	 * Find Video by slug
+	 * 
+	 * @param string $slug
+	 * @return Video
+	 */
+	public static function findBySlug($slug) {
+		return self::where('slug', '=', $slug)->first();
 	}
 	
 	/**
@@ -60,6 +95,12 @@ class Video extends Eloquent {
 		return self::where('type', 'show')->lists('name', 'id');
 	}
 	
+	
+	/*
+	 * Eloquent relationships
+	 */
+	
+	
 	/**
 	 * Video hasOne Studio relationship
 	 * 
@@ -89,4 +130,14 @@ class Video extends Eloquent {
     {
         return $this->hasMany('Price');
     }
+	
+	/**
+	 * Video has and belongs to many Genre
+	 * 
+	 * @return BelongsToMany
+	 */
+	public function genres()
+	{
+		return $this->belongsToMany('Genre', 'video_genres', 'video_id', 'genre_id');
+	}
 }

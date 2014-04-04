@@ -10,10 +10,8 @@
 <ul class="nav nav-tabs">
 	@foreach (array(
 		'video' => array('title' => 'Video informations', 'url' => route('admin.video.show', array($video->id))),
-		'price' => array('title' => 'Prices', 'url' => route('admin.video.price', array($video->id))),
+		'price' => array('title' => 'Prices', 'url' => route('admin.video.{video}.price.index', array($video->id))),
 	) as $key => $value)
 		<li{{ $current === $key ? ' class="active"' : '' }}><a href="{{ $value['url'] }}">{{ $value['title'] }}</a></li>
 	@endforeach
 </ul>
-
-<br />

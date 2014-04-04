@@ -8,18 +8,35 @@ class Admin_PriceController extends \BaseController {
 	 * @var array 
 	 */
 	protected $rules = array(
+		'type'			=> 'required|in:rent,sell',
 		'price'			=> 'required|numeric|min:0',
-		'is_promotion'	=> 'required|in:0,1',
+		'tax'			=> 'required|numeric|min:0',
+		'is_promotion'	=> 'in:0,1',
 		'start_at'		=> 'date',
 		'end_at'		=> 'date',
 	);
+	
+	/**
+	 * Related video
+	 *
+	 * @var Video 
+	 */
+	protected $video = null;
+	
+	/**
+     * Instantiate a new Admin_PriceController instance.
+     */
+    public function __construct()
+    {
+		$this->video = Video::findOrFail(Route::input('video'));
+    }
 	
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
-	public function index($video_id)
+	public function index()
 	{
 		$prices = Price::select();
 		
@@ -27,7 +44,7 @@ class Admin_PriceController extends \BaseController {
 			$prices->orderBy(Input::get('sort'), Input::get('direction', 'asc'));
 		}
 		
-		return View::make('admin/video/price/index', array('prices' => $prices->paginate()));
+		return View::make('admin/video/price/index', array('video' => $this->video, 'prices' => $prices->paginate()));
 	}
 
 	/**
@@ -35,9 +52,9 @@ class Admin_PriceController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create($video_id)
+	public function create()
 	{
-		return View::make('admin/video/price/create')->nest('form', 'admin/video/price/form');
+		return View::make('admin/video/price/create', array('video' => $this->video))->nest('form', 'admin/video/price/form', array('video' => $this->video));
 	}
 
 	/**
@@ -45,38 +62,18 @@ class Admin_PriceController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store($video_id)
+	public function store()
 	{
 		$validator = Validator::make(Input::all(), $this->rules);
 
 		if ($validator->fails()) {
-			return Redirect::route('admin.price.create')->withInput()->withErrors($validator);
+			return Redirect::route('admin.video.{video}.price.create', array($this->video->id))->withInput()->withErrors($validator);
 		} else {
-			$price = Price::create(Input::all());
-			return Redirect::route('admin.price.show', array($price->id));
+			$price = new Price(Input::all());
+			$price->video_id = $this->video->id;
+			$price->save();
+			return Redirect::route('admin.video.{video}.price.index', array($this->video->id));
 		}
-	}
-
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($video_id, $id)
-	{
-		return View::make('admin/video/price/show', array('price' => Price::find($id)));
-	}
-
-	/**
-	 * Display price of specified resource
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function price($video_id, $id)
-	{
-		return View::make('admin/video/price/price', array('price' => Price::find($id)));
 	}
 
 	/**
@@ -85,10 +82,10 @@ class Admin_PriceController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($video_id, $id)
+	public function edit()
 	{
-		$price = Price::find($id);
-		return View::make('admin/video/price/edit', compact('price'))->nest('form', 'admin/video/price/form', compact('price'));
+		$price = Price::findOrFail(Route::input('price'));
+		return View::make('admin/video/price/edit', array('video' => $this->video, 'price' => $price))->nest('form', 'admin/video/price/form', array('video' => $this->video, 'price' => $price));
 	}
 
 	/**
@@ -97,16 +94,16 @@ class Admin_PriceController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($video_id, $id)
+	public function update()
 	{
-		$price = Price::find($id);
+		$price = Price::findOrFail(Route::input('price'));
 		$validator = Validator::make(Input::all(), $this->rules);
 
 		if ($validator->fails()) {
-			return Redirect::route('admin.price.edit', array($id))->withInput()->withErrors($validator);
+			return Redirect::route('admin.video.{video}.price.edit', array($this->video->id))->withInput()->withErrors($validator);
 		} else {
 			$price->update(Input::all());
-			return Redirect::route('admin.price.show', array($price->id));
+			return Redirect::route('admin.video.{video}.price.index', array($this->video->id));
 		}
 	}
 
@@ -116,10 +113,10 @@ class Admin_PriceController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($video_id, $id)
+	public function destroy()
 	{
-		Price::find($id)->delete();
-		return Redirect::route('admin.price.index');
+		Price::findOrFail(Route::input('price'))->delete();
+		return Redirect::route('admin.video.{video}.price.index', array($this->video->id));
 	}
 
 

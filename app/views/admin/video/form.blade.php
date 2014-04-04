@@ -35,6 +35,18 @@
 		</div>
 	</div>
 	<div class="form-group">
+		{{ Form::label('genres', 'Genres *', array('class' => 'col-sm-2 control-label')) }}
+		<div class="col-sm-4">
+			{{ Form::select('genres[]', Genre::getList(), null, array('class' => 'form-control', 'multiple' => true)) }}
+		</div>
+	</div>
+	<div class="form-group">
+		{{ Form::label('slug', 'Slug', array('class' => 'col-sm-2 control-label')) }}
+		<div class="col-sm-4">
+			{{ Form::text('slug', null, array('class' => 'form-control')) }}
+		</div>
+	</div>
+	<div class="form-group">
 		{{ Form::label('summary', 'Summary', array('class' => 'col-sm-2 control-label')) }}
 		<div class="col-sm-4">
 			{{ Form::textarea('summary', null, array('class' => 'form-control ckeditor')) }}
@@ -59,11 +71,15 @@
 	{{ Form::token() }}
 {{ Form::close() }}
 <script>
-$('#type').on('change', function() {
-	if ($(this).val() === 'episode') {
-		$('.parent-group').show();
-	} else {
-		$('.parent-group').hide();
-	}
-}).trigger('change');
+$(function() {
+	$('#type').on('change', function() {
+		if ($(this).val() === 'episode') {
+			$('.parent-group').show();
+		} else {
+			$('.parent-group').hide();
+		}
+	}).trigger('change');
+
+	$('select[name="genres[]"]').selectize();
+});
 </script>

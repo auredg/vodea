@@ -3,7 +3,8 @@
 class HomeController extends BaseController {
 
 	public function index() {
-		return View::make('index');
+		$videos = Video::whereIn('type', array('movie', 'episode'))->latest()->limit(5)->get();
+		return View::make('index', array('latest_videos' => $videos));
 	}
 	
 	public function login() {

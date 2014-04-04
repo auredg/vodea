@@ -2,38 +2,47 @@
 
 @section('content')
 
-<h2>
+@include('admin/video/title', array('current' => 'price'))
+
+<h3>
 	<span>Prices</span>
 	<div class="pull-right">
-		<a href="{{ route('admin.video.price.create') }}" class="btn btn-sm btn-default">
+		<a href="{{ route('admin.video.{video}.price.create', array($video->id)) }}" class="btn btn-sm btn-default">
 			<span class="glyphicon glyphicon-plus"></span> Add new price
 		</a>
 	</div>
-</h2>
+</h3>
 
 @if ($prices->count() > 0)
 <table class="table table-striped">
 	<thead>
 		<tr>
 			<th>ID</th>
-			<th>Name</th>
-			<th></th>				
+			<th>Type</th>
+			<th>Price</th>
+			<th>Tax</th>
+			<th>Promotion</th>
+			<th>Start At</th>
+			<th>End At</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach ($prices as $price)
 		<tr>
 			<td>{{ $price->id }}</span></td>
-			<td>{{ $price->name }}</td>
+			<td>{{ $price->type() }}</td>
+			<td>{{ $price->price }}</td>
+			<td>{{ $price->tax }}</td>
+			<td>{{ $price->is_promotion ? '<span class="label label-success">PROMO</span>' : '' }}</td>
+			<td>{{ $price->start_at }}</td>
+			<td>{{ $price->end_at }}</td>
 			<td class="text-right">
-				{{ Form::open(array('route' => array('admin.video.price.destroy', $price->id), 'method' => 'delete')) }}
+				{{ Form::open(array('route' => array('admin.video.{video}.price.destroy', $video->id, $price->id), 'method' => 'delete')) }}
 					<button type="submit" class="btn btn-xs btn-danger">
 						<span class="glyphicon glyphicon-remove"></span> Delete
 					</button>
-					<a href="{{ route('admin.video.price.show', array($price->id)) }}" class="btn btn-xs btn-info">
-						<span class="glyphicon glyphicon-info-sign"></span> Show
-					</a>
-					<a href="{{ route('admin.video.price.edit', array($price->id)) }}" class="btn btn-xs btn-default">
+					<a href="{{ route('admin.video.{video}.price.edit', array($video->id, $price->id)) }}" class="btn btn-xs btn-default">
 						<span class="glyphicon glyphicon-edit"></span> Edit
 					</a>
 				{{ Form::close() }}
