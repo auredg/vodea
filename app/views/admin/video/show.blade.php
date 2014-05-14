@@ -41,7 +41,7 @@
 		</tr>
 		<tr>
 			<th class="text-right">Genres</th>
-			<td>{{ implode(' - ', $video->genres->lists('name')) }}</td>
+			<td>{{ implodeIn('<span class="label label-success">', '</span>', $video->genres->lists('name'), ' ') }}</td>
 		</tr>
 		<tr>
 			<th class="text-right">Summary</th>

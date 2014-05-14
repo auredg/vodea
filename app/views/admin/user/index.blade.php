@@ -15,10 +15,10 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>ID</th>
-			<th>Login</th>
-			<th>Email</th>
-			<th>Last connection</th>
+			<th>{{ sortLink($users, 'id', 'ID') }}</th>
+			<th>{{ sortLink($users, 'login', 'Login') }}</th>
+			<th>{{ sortLink($users, 'email', 'Email') }}</th>
+			<th>{{ sortLink($users, 'last', 'Last connection') }}</th>
 			<th></th>				
 		</tr>
 	</thead>

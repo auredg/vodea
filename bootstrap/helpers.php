@@ -40,3 +40,7 @@ function sortLink($model, $field, $title) {
 function activeLabel($value) {
 	return '<span class="label label-' . ($value ? 'success">Yes' : 'danger">No' ) . '</span>';
 }
+
+function implodeIn($pre, $post, $array, $separator = '') {
+	return $pre . implode($post . $separator . $pre, (array) $array) . $post;
+}

@@ -35,7 +35,8 @@ Route::group(array('prefix' => 'admin', 'before' => 'admin'), function() {
     Route::resource('user', 'Admin_UserController');
     Route::resource('studio', 'Admin_StudioController');
     Route::resource('genre', 'Admin_GenreController');
-    Route::resource('person/{role}', 'Admin_PersonController');
+    Route::resource('person/actor', 'Admin_PersonController');
+    Route::resource('person/director', 'Admin_PersonController');
 	
     Route::resource('video', 'Admin_VideoController');
 	

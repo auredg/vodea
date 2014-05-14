@@ -5,7 +5,7 @@
 <h2>
 	<span>Persons</span>
 	<div class="pull-right">
-		<a href="{{ route('admin.person.{role}.create', array($role)) }}" class="btn btn-sm btn-default">
+		<a href="{{ route('admin.person.' . $role . '.create') }}" class="btn btn-sm btn-default">
 			<span class="glyphicon glyphicon-plus"></span> Add new person
 		</a>
 	</div>
@@ -30,10 +30,10 @@
 					<button type="submit" class="btn btn-xs btn-danger">
 						<span class="glyphicon glyphicon-remove"></span> Delete
 					</button>
-					<a href="{{ route('admin.person.{role}.show', array($role, $person->id)) }}" class="btn btn-xs btn-info">
+					<a href="{{ route('admin.person.' . $role . '.show', array($person->id)) }}" class="btn btn-xs btn-info">
 						<span class="glyphicon glyphicon-info-sign"></span> Show
 					</a>
-					<a href="{{ route('admin.person.{role}.edit', array($role, $person->id)) }}" class="btn btn-xs btn-default">
+					<a href="{{ route('admin.person.' . $role . '.edit', array($person->id)) }}" class="btn btn-xs btn-default">
 						<span class="glyphicon glyphicon-edit"></span> Edit
 					</a>
 				{{ Form::close() }}

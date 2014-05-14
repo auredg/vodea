@@ -46,8 +46,8 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Related content <b class="caret"></b></a>
 							<ul class="dropdown-menu">
-								<li><a href="{{ route('admin.person.{role}.index', array('actor')) }}">Actors</a></li>
-								<li><a href="{{ route('admin.person.{role}.index', array('director')) }}">Directors</a></li>
+								<li><a href="{{ route('admin.person.actor.index') }}">Actors</a></li>
+								<li><a href="{{ route('admin.person.director.index') }}">Directors</a></li>
 								<li><a href="{{ route('admin.studio.index') }}">Studios</a></li>
 								<li><a href="{{ route('admin.genre.index') }}">Genres</a></li>
 							</ul>

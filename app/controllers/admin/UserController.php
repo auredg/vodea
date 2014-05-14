@@ -9,7 +9,13 @@ class Admin_UserController extends \BaseController {
 	 */
 	public function index()
 	{
-		return View::make('admin/user/index', array('users' => User::paginate()));
+		$users = User::select();
+		
+		if (Input::get('sort')) {
+			$users->orderBy(Input::get('sort'), Input::get('direction', 'asc'));
+		}
+		
+		return View::make('admin/user/index', array('users' => $users->paginate()));
 	}
 
 	/**

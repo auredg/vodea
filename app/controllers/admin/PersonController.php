@@ -5,7 +5,10 @@ class Admin_PersonController extends \BaseController {
 	protected $role = '';
 	
 	public function __construct() {
-		$this->role = Route::input('role');
+		$current = Route::current();
+		if (preg_match('`.*\/([a-z]+)`', $current->getUri(), $matches)) {
+			$this->role = $matches[1];
+		}
 	}
 	
 	/**
@@ -44,10 +47,10 @@ class Admin_PersonController extends \BaseController {
 		));
 
 		if ($validator->fails()) {
-			return Redirect::route('admin.person.{role}.create', array($this->role))->withInput()->withErrors($validator);
+			return Redirect::route('admin.person.' . $this->role . '.create', array($this->role))->withInput()->withErrors($validator);
 		} else {
 			$person = Person::create(Input::all());
-			return Redirect::route('admin.person.{role}.index', array($this->role));
+			return Redirect::route('admin.person.' . $this->role . '.index', array($this->role));
 		}
 	}
 
@@ -77,10 +80,10 @@ class Admin_PersonController extends \BaseController {
 		));
 
 		if ($validator->fails()) {
-			return Redirect::route('admin.person.{role}.edit', array($this->role, $id))->withInput()->withErrors($validator);
+			return Redirect::route('admin.person.' . $this->role . '.edit', array($this->role, $id))->withInput()->withErrors($validator);
 		} else {
 			$person->update(Input::all());
-			return Redirect::route('admin.person.{role}.index', array($this->role));
+			return Redirect::route('admin.person.' . $this->role . '.index', array($this->role));
 		}
 	}
 
@@ -93,7 +96,7 @@ class Admin_PersonController extends \BaseController {
 	public function destroy($id)
 	{
 		Person::find($id)->delete();
-		return Redirect::route('admin.person.{role}.index', array($this->role));
+		return Redirect::route('admin.person.' . $this->role . '.index', array($this->role));
 	}
 
 }
